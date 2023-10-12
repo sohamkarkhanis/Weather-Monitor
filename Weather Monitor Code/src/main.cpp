@@ -16,6 +16,10 @@
 #include <WiFi.h>
 #include <Wire.h>
 
+// #define INIT_CSV        // if you want to initialise the csv file,
+// uncomment this line and upload the code once,
+// then comment it out and re-upload the code. You will get a blank csv file with column names and lose all previous readings
+
 // ------ Objects ------ //
 #define DHTPIN  32
 #define DHTTYPE DHT11
@@ -103,7 +107,10 @@ void setup() {
         Serial.print((char)file.read());
     }
     file.close();
+
+#ifdef INIT_CSV
     initCsv();
+#endif
 }
 
 void loop() {
@@ -192,7 +199,7 @@ void initCsv() {
     "Humidity" + "," + 
     "Pressure" + "," +
     "Altitude" + "\n";
-    writeFile(SPIFFS, "/WeatherData.csv", dataMessage.c_str()); // this will overwrite the enitre file *EVERYTIME* the device resets
+    writeFile(SPIFFS, "/WeatherData.csv", dataMessage.c_str()); // this will *overwrite* the entire file when the function is called
 }
 
 void addDatatoCsv() {
